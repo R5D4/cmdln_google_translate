@@ -40,8 +40,10 @@ def translate_file(from_lang, to_lang, in_file, out_dir, verbose):
     make_dir(os.path.dirname(out_file))
     
     with open(out_file, 'w') as output:
-        print translation
-        output.write(translation)
+        # encode translation as utf-8 else write will try to encode as ascii
+        # and get UnicodeEncodeError
+        encoded_translation = translation.encode('utf-8')
+        output.write(encoded_translation)
 
     if verbose:
         print "Done."
