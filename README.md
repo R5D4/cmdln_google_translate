@@ -7,6 +7,10 @@ python command line tool to translate multiple files
 Want to be able to feed directories of text files to the script and have it
 output the translated versions.
 
+## Description
+
+Uses goslate by Zhuo Qiang for the heavylifting.
+
 ## Usage
 
 ```bash
@@ -19,7 +23,7 @@ translated files in `outputDir`.
 In the future, might allow regex to indicate what files to include, like:
 
 ```bash
-./translate inputDir/*.py outputDir ru en
+python translate.py ru en -i inputDir/*.py -o outputDir
 ```
 
 which will only translate the `.py` files.
