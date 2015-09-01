@@ -36,3 +36,10 @@ e.g. passing `../inputDir` or `../outputDir` has undesirable results.
 
 Script works when used from one directory level above input and output
 directories.
+
+## Planned Updates
+
+1. Fix relative path issue
+2. Upgrade to support regex to indicate input files (maybe)
+3. Automatically detect encoding
+4. Automatically detect source language (maybe)
