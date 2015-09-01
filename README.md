@@ -7,19 +7,28 @@ python command line tool to translate multiple files
 Want to be able to feed directories of text files to the script and have it
 output the translated versions.
 
-Something like:
+## Usage
 
 ```bash
-./translate inputDir outputDir ru en
+python translate.py ru en -i inputDir -o outputDir 
 ```
 
 to translate all files in `inputDir` from Russian to English and put the
 translated files in `outputDir`.
 
-Might also allow regex to indicate what files to include, like:
+In the future, might allow regex to indicate what files to include, like:
 
 ```bash
 ./translate inputDir/*.py outputDir ru en
 ```
 
 which will only translate the `.py` files.
+
+## Issues
+
+Behavior using relational paths isn't robust.
+
+e.g. passing `../inputDir` or `../outputDir` has undesirable results.
+
+Script works when used from one directory level above input and output
+directories.
