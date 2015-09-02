@@ -1,11 +1,11 @@
 # Command Line Google Translate (for many files)
 
-python command line tool to translate multiple files
+python command line tool to translate multiple files with Google translate
 
 ## Goal
 
 Want to be able to feed directories of text files to the script and have it
-output the translated versions.
+save the translated versions in a directory.
 
 ## Description
 
@@ -17,29 +17,22 @@ Uses goslate by Zhuo Qiang for the heavylifting.
 python translate.py ru en -i inputDir -o outputDir 
 ```
 
-to translate all files in `inputDir` from Russian to English and put the
+to translate all `.out` files in `inputDir` from Russian to English and put the
 translated files in `outputDir`.
 
-In the future, might allow regex to indicate what files to include, like:
-
-```bash
-python translate.py ru en -i inputDir/*.py -o outputDir
-```
-
-which will only translate the `.py` files.
+Add the `-v` optional flag to output status for each file being processed.
 
 ## Issues
 
-Behavior using relational paths isn't robust.
-
-e.g. passing `../inputDir` or `../outputDir` has undesirable results.
-
-Script works when used from one directory level above input and output
-directories.
+Only translates `.out` files.
 
 ## Planned Updates
 
-1. Fix relative path issue
-2. Upgrade to support regex to indicate input files (maybe)
-3. Automatically detect encoding
-4. Automatically detect source language (maybe)
+1. Allow user to indicate any file type (multiple types too) as input
+2. Support both directory and file(s) as input
+
+## Maybe Features
+
+1. Automatically detect source language
+2. Automatically detect encoding
+3. Support Bash 4's globstar globbing
