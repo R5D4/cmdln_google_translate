@@ -37,6 +37,10 @@ def translate_file(from_lang, to_lang, in_file, out_dir, verbose):
     # remove the .out so we can add the new extension
     file_base, ext = os.path.splitext(in_file)
     out_file = os.path.join(out_dir, file_base+'.'+to_lang)
+
+    if verbose:
+        print "Output in %s... " % out_file,
+
     make_dir(os.path.dirname(out_file))
     
     with open(out_file, 'w') as output:
@@ -49,7 +53,9 @@ def translate_file(from_lang, to_lang, in_file, out_dir, verbose):
         print "Done."
 
 def translate_dir(from_lang, to_lang, in_dir, out_dir, verbose):
+    print "in_dir = %s" % in_dir
     for root, dirs, files in os.walk(in_dir):
+        print "root = {}, dirs = {}, files = {}".format(root, dirs, files)
         for f in files:
             file_name, file_ext = os.path.splitext(f)
             # translate *.out
@@ -67,19 +73,20 @@ if __name__ == "__main__":
     parser.add_argument("-i", help="input directory")
     parser.add_argument("-o", help="output directory")
     parser.add_argument("-v", "--verbose", action="store_true", 
-                        help="verbosity")
+                        help="verbosity", default=False)
     args = parser.parse_args()
     print args
 
     if not (args.i and args.o):
         print "Please indicate input and output directories."
-    elif args.verbose:
-        print "Will output path and name of each file."
-        translate_dir(args.from_lang, args.to_lang, args.i, args.o, 
-                      args.verbose)
-    elif not args.verbose:
-        print "Translating files in {} from {} to {}... ".format(args.i,
+    else:
+        if args.verbose:
+            print "Will output path and name of each file."
+        elif not args.verbose:
+            print "Translating files in {} from {} to {}... ".format(args.i,
                                                                 args.from_lang,
                                                                 args.to_lang),
-        translate_dir(args.from_lang, args.to_lang, args.i, args.o) 
-        print "Done."
+            print "Done."
+        translate_dir(args.from_lang, args.to_lang, args.i, args.o, 
+                      args.verbose)
+
