@@ -27,20 +27,27 @@ def make_dir(path):
             raise
 
 
-def translate_file(from_lang, to_lang, in_file, out_dir, verbose):
+def translate_file(from_lang, to_lang, base_dir, in_file, out_dir, verbose):
+    """
+    Translate a file and write the translation to a directory.
+
+    base_dir: The directory entered by the user if given a input dir.
+              If given an input file, it is simply the file path.
+              Used to create proper directory structure under output dir.
+    """
     if verbose:
         print "Translating %s... " % in_file,
 
     translated_lines = GS.translate(open(in_file), to_lang, from_lang)
     translation = '\n'.join(translated_lines)
-    # determine output file name and directory
-    # remove the .out so we can add the new extension
-    file_base, ext = os.path.splitext(in_file)
-    out_file = os.path.join(out_dir, file_base+'.'+to_lang)
 
+    # determine output file name and directory
+    # recreate dir structure of input directory under output directory
+    in_file_name, ext = os.path.splitext(in_file)
+    rel_file_name = os.path.relpath(in_file_name, base_dir)
+    out_file = os.path.join(out_dir, rel_file_name+'.'+to_lang)
     if verbose:
         print "Output in %s... " % out_file,
-
     make_dir(os.path.dirname(out_file))
     
     with open(out_file, 'w') as output:
@@ -61,7 +68,8 @@ def translate_dir(from_lang, to_lang, in_dir, out_dir, verbose):
             # translate *.out
             if file_ext == '.'+OUT_EXT:
                 in_file = os.path.join(root, f)
-                translate_file(from_lang, to_lang, in_file, out_dir, verbose)
+                translate_file(from_lang, to_lang, in_dir, in_file, out_dir, 
+                               verbose)
             else:
                 pass
 
