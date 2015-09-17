@@ -4,7 +4,7 @@
 Translate a batch of files.
 
 Usage:
-    python gtrans ru en -i inputDir -o outputDir -v 
+    python gtrans ru en -i inputDir -o outputDir -x py 
 """
 
 import concurrent.futures
@@ -13,8 +13,6 @@ import errno
 import argparse
 import goslate
 
-# only translate *.out
-OUT_EXT = 'out'
 # instantiate a Goslate object for the entire script
 GS = goslate.Goslate()
 
@@ -46,10 +44,13 @@ def translate_file(from_lang, to_lang, base_dir, in_file, out_dir, verbose):
     # determine output file name and directory
     # recreate dir structure of input directory under output directory
     in_file_name, ext = os.path.splitext(in_file)
+    # relative path gets rid of '..' in path
     rel_file_name = os.path.relpath(in_file_name, base_dir)
     out_file = os.path.join(out_dir, rel_file_name+'.'+to_lang)
+
     if verbose:
         print "Output in %s... " % out_file,
+
     make_dir(os.path.dirname(out_file))
     
     with open(out_file, 'w') as output:
@@ -61,14 +62,14 @@ def translate_file(from_lang, to_lang, base_dir, in_file, out_dir, verbose):
     if verbose:
         print "Done."
 
-def translate_dir(from_lang, to_lang, in_dir, out_dir, verbose):
-    print "in_dir = %s" % in_dir
+def translate_dir(from_lang, to_lang, in_dir, out_dir, ext, verbose):
+    #print "in_dir = %s" % in_dir
     for root, dirs, files in os.walk(in_dir):
-        print "root = {}, dirs = {}, files = {}".format(root, dirs, files)
+        #print "root = {}, dirs = {}, files = {}".format(root, dirs, files)
         for f in files:
             file_name, file_ext = os.path.splitext(f)
-            # translate *.out
-            if file_ext == '.'+OUT_EXT:
+            # check file type
+            if ext is None or file_ext == '.'+ext:
                 in_file = os.path.join(root, f)
                 translate_file(from_lang, to_lang, in_dir, in_file, out_dir, 
                                verbose)
@@ -82,21 +83,21 @@ if __name__ == "__main__":
     parser.add_argument("to_lang", help="output language")
     parser.add_argument("-i", help="input directory")
     parser.add_argument("-o", help="output directory")
+    parser.add_argument("-x", help="file extension. Default all types.")
     parser.add_argument("-v", "--verbose", action="store_true", 
                         help="verbose", default=False)
     args = parser.parse_args()
-    print args
+    #print args
 
     if not (args.i and args.o):
         print "Please indicate input and output directories."
     else:
-        if args.verbose:
-            print "Will output path and name of each file."
-        elif not args.verbose:
+        if not args.verbose:
             print "Translating files in {} from {} to {}... ".format(args.i,
                                                                 args.from_lang,
                                                                 args.to_lang),
-            print "Done."
-        translate_dir(args.from_lang, args.to_lang, args.i, args.o, 
+        translate_dir(args.from_lang, args.to_lang, args.i, args.o, args.x,
                       args.verbose)
+        if not args.verbose:
+            print "Done."
 
